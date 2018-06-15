@@ -78,20 +78,89 @@
     console.log('ordered: ', ordered);
     // Array.prototype.reduce()
     // 4. How many years did all the inventors live?
+    /*
+      like the other array methods, reduce loops over every
+      item in our array.
+      the first argument of reduce represents what you returned
+      from the function last time (accumulator), we can call that total
+      and it is also going to give you the inventor (currentValue)
+     */
+    // const totalYears = inventors.reduce((total, inventor) => {
+    //   return total + (inventor.passed - inventor.year);
+    // });
+    /*
+      at this point in our code we are almost there but if you
+      look at this log we get back [object Object]7859843780508967907681
+      this is because the first time reduce loops we dont have a total
+      and its equal to undefined. so what we need to do is use the second
+      argument (initialValue) to reduce with the value 0. this means reduce
+      will use 0 as the initial value so we will not get undefined anymore
+      and our years will properly add up.
+    */
+    const totalYears = inventors.reduce((total, inventor) => {
+      return total + (inventor.passed - inventor.year);
+    }, 0);
+
+    console.log('totalYears: ', totalYears);
 
     // 5. Sort the inventors by years lived
 
+    const oldest = inventors.sort((a, b) => {
+      const lastGuy = a.passed - a.year;
+      const nextGuy = b.passed - b.year;
+      return lastGuy > nextGuy ? -1 : 1;
+    });
+    console.log('oldest: ', oldest);
+
     // 6. create a list of Boulevards in Paris that contain 'de' anywhere in the name
     // https://en.wikipedia.org/wiki/Category:Boulevards_in_Paris
-
-
+    // use this js in the console of the wiki page
+    
+    // const links = category.querySelectorAll('a');
+    // qSA returns a nodelist but only forEach is available
+    // on nodeLists so lets turn it into an array so we can run
+    // map on it, first, wrap it in an array then we can use es6 
+    // spread operator to spread each item into the array
+    // into the array.
+    // we can also simply wrap it in Array.from(category.quer...)
+    // i like using es6 so im using that one, even tho Array.from
+    // reads better
+    // const category = document.querySelector('.mw-category');
+    // const links = [...category.querySelectorAll('a')];
+    // const de = links
+    //   .map(link => link.textContent)
+    //   .filter(streetName => streetName.includes('de'));
+    // console.log('de: ', de);
     // 7. sort Exercise
     // Sort the people alphabetically by last name
-
+    const alpha = people.sort((lastOne, nextOne) => {
+      const [aLast, aFirst] = lastOne.split(', ');
+      const [bLast, bFirst] = nextOne.split(', ');
+      console.log('aLast, aFirst: ', aLast, aFirst);
+      console.log('bLast, bFirst: ', bLast, bFirst);
+      return aLast > bLast ? 1 : -1;
+      // console.log('lastOne: ', lastOne);
+      // console.log('nextOne: ', nextOne);
+    });
+    console.log('alpha: ', alpha);
     // 8. Reduce Exercise
     // Sum up the instances of each of these
     const data = ['car', 'car', 'truck', 'truck', 'bike', 'walk', 'car', 'van', 'bike', 'walk', 'car', 'van', 'car', 'truck' ];
-
+    // start our reduce with an empty object that we add to
+    // as seen in second argument in the reduce method
+    const transportation = data.reduce((obj, item) => {
+      // console.log('transportation item: ', item);
+      // what we want to do is to increment our object key
+      // so we can tally how many instances of the key there are
+      // we need to check first if there is an item of an obj or not
+      // if it doesnt we can set it to 0 and increment and return it
+      if (!obj[item]) {
+        obj[item] = 0;
+      }
+      obj[item]++;
+      return obj;
+    }, {});
+  console.log('transportation: ', transportation);
   </script>
 </body>
 </html>

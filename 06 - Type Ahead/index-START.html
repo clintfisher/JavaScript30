@@ -21,7 +21,7 @@
     fetch(endpoint)
     .then(
       data => {
-      /* if you check the log at this point you
+      /* if you check console.log(data) at this point you
         will see that its a Response and a 200 status
         looks good but beyond that its weird looking and where
         actually is our data? (this is why wes calls this var 'blob')
@@ -66,8 +66,8 @@
           `g` is for global - meaning its going to look thru the entire
           string for that specific one, `i` is insensitve meaning its case
           insensitive and will match on either uppercase or lowercase.
-          then we call .match and pass in our regex and return if either
-          a city or state from `wordToMatch` matches  
+          then we call .match and pass in the value of our regex wordToMatch
+          and return if either a city or state from `wordToMatch` matches  
         */
         const regex = new RegExp(wordToMatch, 'gi');
         return place.city.match(regex) || place.state.match(regex);
@@ -76,15 +76,10 @@
     /*
     now we need to create a displayMatches function
     that is going to be called every time someone
-    changes the value
+    changes the value in our search input
     */
     const searchInput = document.querySelector('.search');
     const suggestions = document.querySelector('.suggestions');
-    // wes didnt explain this function just that it formats a string into
-    // commented one and just grabbed it from the internet
-    const numberWithCommas = (x) => {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };
 
     const displayMatches = () => {
       // console.log('this value in displayMatches: ', searchInput.value);
@@ -123,7 +118,14 @@
       .join('');
       suggestions.innerHTML = html;
     };
+
+    // wes didnt explain this function just that it formats a string into
+    // commented one and just grabbed it from the internet
+    const numberWithCommas = (x) => {
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
     
+    console.log('cites: ', cities);
     searchInput.addEventListener('change', displayMatches);
     // at this point we only listen for change which happens when
     // a user focuses off the input, not when they type something different

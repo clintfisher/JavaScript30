@@ -14,6 +14,12 @@
   ctx.strokeStyle = '#BADA55';
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
+  ctx.lineWidth = 5;
+  /* you can also use blend modes:
+    https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+  */
+  ctx.globalCompositeOperation = 'multiply';
+  
   /*  
     we need a flag here that we set to false,
     then when the user clicks down we set it to true,
@@ -30,18 +36,28 @@
   */
   let lastX = 0;
   let lastY = 0;
+  /* 
+  hue of hsl is determined by degrees - 0 is red as is 359
+  lets start at red
+  */ 
+  let hue = 0;
+  // true means we are building up
+  let direction = true;
   // now we are going to create a function that will be called
   // every time a user moves their mouse over the canvas
-  function draw(event) {
+  const draw = (event) => {
     // console.log({event});
     // so this runs draw every time someone moves
     // their mouse which we dont want so lets start
     // our check and return early if they are not moused down
     if (!isDrawing) return;
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    // ctx.lineWidth = hue;
     ctx.beginPath();
     // start from
     ctx.moveTo(lastX, lastY);
     // go to
+    // offsetX and offSetY you can see in the even log
     ctx.lineTo(event.offsetX, event.offsetY);
     ctx.stroke();
     // now we need to update our lastX and lastY vars to the new coords
@@ -50,6 +66,23 @@
     // we can do this in one line with es6 destructuring assignment:
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
     [lastX, lastY] = [event.offsetX, event.offsetY];
+    // increment our hue each time we draw to change
+    // the color of the strokeStyle
+    hue++;
+    // if we rotate past 360 just set it back  to 0
+    if (hue >= 360) {
+      hue = 0;
+    }
+    // our initial lineWidth is 0 so we go from 0 to 100 then flip
+    // and when we decrement once we hit 0 we flip our direction
+
+    if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+      // flip the direction
+      direction = !direction;
+    }
+    // anytime the direction is true we want to make our 
+    // drawing line wider otherise we  make it narrower
+    direction ? ctx.lineWidth++ : ctx.lineWidth--;  
   }
   canvas.addEventListener('mousedown', (event) => {
     /*
